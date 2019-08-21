@@ -24,7 +24,7 @@ import antlr.LexerSharedInputState;
 import antlr.collections.impl.BitSet;
 import antlr.SemanticException;
 
-public class MeuLexer extends antlr.CharScanner implements MeuParserExpTokenTypes, TokenStream
+public class MeuLexer extends antlr.CharScanner implements MeuParserTokenTypes, TokenStream
  {
 public MeuLexer(InputStream in) {
 	this(new ByteBuffer(in));
@@ -40,7 +40,6 @@ public MeuLexer(LexerSharedInputState state) {
 	caseSensitiveLiterals = true;
 	setCaseSensitive(true);
 	literals = new Hashtable();
-	literals.put(new ANTLRHashString("MultiplicaPor", this), new Integer(30));
 	literals.put(new ANTLRHashString("programa", this), new Integer(4));
 	literals.put(new ANTLRHashString("senao", this), new Integer(20));
 	literals.put(new ANTLRHashString("ElevadoA", this), new Integer(32));
@@ -48,6 +47,7 @@ public MeuLexer(LexerSharedInputState state) {
 	literals.put(new ANTLRHashString("Mais", this), new Integer(28));
 	literals.put(new ANTLRHashString("leia", this), new Integer(10));
 	literals.put(new ANTLRHashString("eMenorQue", this), new Integer(33));
+	literals.put(new ANTLRHashString("DivididoPor", this), new Integer(31));
 	literals.put(new ANTLRHashString("fimprog", this), new Integer(5));
 	literals.put(new ANTLRHashString("se", this), new Integer(16));
 	literals.put(new ANTLRHashString("caso", this), new Integer(25));
@@ -55,9 +55,9 @@ public MeuLexer(LexerSharedInputState state) {
 	literals.put(new ANTLRHashString("declare", this), new Integer(7));
 	literals.put(new ANTLRHashString("para", this), new Integer(22));
 	literals.put(new ANTLRHashString("eMaiorEIgualQue", this), new Integer(36));
-	literals.put(new ANTLRHashString("DividePor", this), new Integer(31));
 	literals.put(new ANTLRHashString("Menos", this), new Integer(29));
 	literals.put(new ANTLRHashString("escolha", this), new Integer(24));
+	literals.put(new ANTLRHashString("MultiplicadoPor", this), new Integer(30));
 	literals.put(new ANTLRHashString("eDiferenteDe", this), new Integer(37));
 	literals.put(new ANTLRHashString("recebe", this), new Integer(15));
 	literals.put(new ANTLRHashString("entao", this), new Integer(17));

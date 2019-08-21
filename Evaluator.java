@@ -6,8 +6,8 @@ public class Evaluator {
 
     public static void main(String args[]) {
         try {
-            MeuLexerExp lexer = new MeuLexerExp(new FileInputStream(new File("input.in")));
-            MeuParserExp parser = new MeuParserExp(lexer);
+            MeuLexer lexer = new MeuLexer(new FileInputStream(new File("input.in")));
+            MeuParser parser = new MeuParser(lexer);
             System.out.println("Starting Expression Parsing");
             parser.expr();
             System.out.println("Parsing finished Sucessfully");

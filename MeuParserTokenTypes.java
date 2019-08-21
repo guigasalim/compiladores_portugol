@@ -29,8 +29,8 @@ public interface MeuParserTokenTypes {
 	int LITERAL_faca = 27;
 	int LITERAL_Mais = 28;
 	int LITERAL_Menos = 29;
-	int LITERAL_MultiplicaPor = 30;
-	int LITERAL_DividePor = 31;
+	int LITERAL_MultiplicadoPor = 30;
+	int LITERAL_DivididoPor = 31;
 	int LITERAL_ElevadoA = 32;
 	int LITERAL_eMenorQue = 33;
 	int LITERAL_eMaiorQue = 34;

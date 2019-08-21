@@ -1,4 +1,4 @@
-class MeuParserExp extends Parser;
+class MeuParser extends Parser;
 {
  Expression expression;
    AbstractOperand num;
@@ -28,7 +28,7 @@ bloco       :  (cmd)+
     
 cmd         :  cmdLeia T_pontof
             |  cmdEscreva T_pontof
-            |  cmdAttr T_pontof
+            |  cmdAttr  T_pontof
 	        |  cmdIf 
             |  cmdFor 
             |  cmdSwitch 
@@ -44,9 +44,9 @@ cmdLeia     :  "leia" T_ap
                         T_fp
             ;
 
-cmdEscreva  :  "escreva" T_ap (T_texto{System.out.println("oiiiiiii2");} |
+cmdEscreva  :  "escreva" T_ap (T_texto |
                                 T_Id
-                                    {System.out.println("oiiiiiii");
+                                    {
                                         if (mapVar.get(LT(0).getText()) == null){
                                                 throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
                                     
@@ -99,16 +99,20 @@ cmdSwitch   : "escolha" T_ap T_Id
                                 
                                 T_fp T_cha ("caso" (T_num|T_texto) "faca" bloco )+ T_chf
 	        ;
-expr        : {expression = new Expression();}  expr_c T_pontof
-                    {
-                        if (expression.getRoot() == null) expression.setRoot(num);
-                        expression.eval();
-                        System.out.println(expression);
-                        System.out.println(expression.getRoot().toXml());
-                    } 
-            ;
 
-expr_c        :  termo (cmdSoma 
+
+expr        : {expression = new Expression();} expr_c 
+          {
+            if (expression.getRoot() == null) expression.setRoot(num);
+            expression.eval();
+            System.out.println(expression);
+            System.out.println(expression.getRoot().toXml());
+          } ;
+          
+          
+          
+          
+expr_c :          termo (cmdSoma 
                      { 
                      if(expression.getRoot() == null){
                         sumOrSubt.setRight(num);
@@ -140,7 +144,39 @@ expr_c        :  termo (cmdSoma
                      }
                   })* 
             ;            
-termo       :  fator (cmdMult|cmdDivi)*
+termo       :  fator (cmdMult
+                      { 
+                     if(expression.getRoot() == null){
+                        multOrDiv.setRight(num);
+                        expression.setRoot(multOrDiv);
+                        parent = multOrDiv;
+                     }
+                     else{
+                         multOrDiv = new BinaryOperand(op);
+                         multOrDiv.setRight(num);
+                         BinaryOperand pai = (BinaryOperand)parent;
+                         multOrDiv.setLeft(pai.getRight());
+                         pai.setRight(multOrDiv);
+                     }
+                  }
+                     
+                    |cmdDivi
+                     { 
+                     if(expression.getRoot() == null){
+                        multOrDiv.setRight(num);
+                        expression.setRoot(multOrDiv);
+                        parent = multOrDiv;
+                     }
+                     else{
+                         multOrDiv = new BinaryOperand(op);
+                         multOrDiv.setRight(num);
+                         BinaryOperand pai = (BinaryOperand)parent;
+                         multOrDiv.setLeft(pai.getRight());
+                         pai.setRight(multOrDiv);
+                     }
+                  }
+                    
+                     )*
             ;
 
 fator       :  T_Id
@@ -154,7 +190,14 @@ fator       :  T_Id
                 | T_num 
                 { num = new UnaryOperand(Float.parseFloat(LT(0).getText()));
                 }
-                | T_ap expr T_fp
+                | T_ap expr {expression = new Expression();} 
+                  T_fp
+                  {
+                    if (expression.getRoot() == null)   expression.setRoot(num);
+                                                        expression.eval();
+                                                        System.out.println(expression);
+                                                        System.out.println(expression.getRoot().toXml());
+          } 
             ;
             
 cmdSoma :  "Mais"
@@ -166,15 +209,20 @@ cmdSoma :  "Mais"
           
         ;
 cmdSubt : "Menos"
-            {op='-';
-            sumOrSubt = new BinaryOperand('-');
+            {
+op='-';
+            sumOrSubt = new BinaryOperand(op);
                                 sumOrSubt.setLeft(num);} 
             termo
             
         ;
-cmdMult : "MultiplicaPor" fator
+cmdMult : "MultiplicadoPor"{op='*';
+            multOrDiv = new BinaryOperand(op);
+                                multOrDiv.setLeft(num);} fator
         ;
-cmdDivi : "DividePor" fator
+cmdDivi : "DivididoPor"{op='/';
+            multOrDiv = new BinaryOperand(op);
+                                multOrDiv.setLeft(num);} fator
         ;
 cmdElev : "ElevadoA" termo
         ;
@@ -196,7 +244,7 @@ cmdNe	    : "eDiferenteDe" fator
 	        
 cmdEq        : "eIgualQue" fator
             ;
-class MeuLexerExp extends Lexer;
+class MeuLexer extends Lexer;
 
 options{
     caseSensitive = true;

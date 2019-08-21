@@ -7,7 +7,7 @@ leia(b).
 leia(c).
 
 
-c recebe a Mais b.
+
 
 escreva('O resultado da soma vale').
 escreva( c ).
@@ -21,7 +21,7 @@ leia(s).
 } 
 senao{
 
-c recebe b Mais 5 Mais 3 Menos a Mais 45.
+b Mais 5 Mais 3 Menos a Mais 45.
 
 }.
 

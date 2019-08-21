@@ -207,13 +207,12 @@ public MeuParser(ParserSharedInputState state) {
 			case T_texto:
 			{
 				match(T_texto);
-				System.out.println("oiiiiiii2");
 				break;
 			}
 			case T_Id:
 			{
 				match(T_Id);
-				System.out.println("oiiiiiii");
+				
 				if (mapVar.get(LT(0).getText()) == null){
 				throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
 				
@@ -424,7 +423,6 @@ public MeuParser(ParserSharedInputState state) {
 		try {      // for error handling
 			expression = new Expression();
 			expr_c();
-			match(T_pontof);
 			
 			if (expression.getRoot() == null) expression.setRoot(num);
 			expression.eval();
@@ -493,7 +491,14 @@ public MeuParser(ParserSharedInputState state) {
 			{
 				match(T_ap);
 				expr();
+				expression = new Expression();
 				match(T_fp);
+				
+				if (expression.getRoot() == null)   expression.setRoot(num);
+				expression.eval();
+				System.out.println(expression);
+				System.out.println(expression.getRoot().toXml());
+				
 				break;
 			}
 			default:
@@ -710,7 +715,7 @@ public MeuParser(ParserSharedInputState state) {
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
-			recover(ex,_tokenSet_4);
+			recover(ex,_tokenSet_6);
 		}
 	}
 	
@@ -723,14 +728,42 @@ public MeuParser(ParserSharedInputState state) {
 			_loop32:
 			do {
 				switch ( LA(1)) {
-				case LITERAL_MultiplicaPor:
+				case LITERAL_MultiplicadoPor:
 				{
 					cmdMult();
+					
+					if(expression.getRoot() == null){
+					multOrDiv.setRight(num);
+					expression.setRoot(multOrDiv);
+					parent = multOrDiv;
+					}
+					else{
+					multOrDiv = new BinaryOperand(op);
+					multOrDiv.setRight(num);
+					BinaryOperand pai = (BinaryOperand)parent;
+					multOrDiv.setLeft(pai.getRight());
+					pai.setRight(multOrDiv);
+					}
+					
 					break;
 				}
-				case LITERAL_DividePor:
+				case LITERAL_DivididoPor:
 				{
 					cmdDivi();
+					
+					if(expression.getRoot() == null){
+					multOrDiv.setRight(num);
+					expression.setRoot(multOrDiv);
+					parent = multOrDiv;
+					}
+					else{
+					multOrDiv = new BinaryOperand(op);
+					multOrDiv.setRight(num);
+					BinaryOperand pai = (BinaryOperand)parent;
+					multOrDiv.setLeft(pai.getRight());
+					pai.setRight(multOrDiv);
+					}
+					
 					break;
 				}
 				default:
@@ -768,8 +801,9 @@ public MeuParser(ParserSharedInputState state) {
 		
 		try {      // for error handling
 			match(LITERAL_Menos);
+			
 			op='-';
-			sumOrSubt = new BinaryOperand('-');
+			sumOrSubt = new BinaryOperand(op);
 			sumOrSubt.setLeft(num);
 			termo();
 		}
@@ -783,7 +817,10 @@ public MeuParser(ParserSharedInputState state) {
 		
 		
 		try {      // for error handling
-			match(LITERAL_MultiplicaPor);
+			match(LITERAL_MultiplicadoPor);
+			op='*';
+			multOrDiv = new BinaryOperand(op);
+			multOrDiv.setLeft(num);
 			fator();
 		}
 		catch (RecognitionException ex) {
@@ -796,7 +833,10 @@ public MeuParser(ParserSharedInputState state) {
 		
 		
 		try {      // for error handling
-			match(LITERAL_DividePor);
+			match(LITERAL_DivididoPor);
+			op='/';
+			multOrDiv = new BinaryOperand(op);
+			multOrDiv.setLeft(num);
 			fator();
 		}
 		catch (RecognitionException ex) {
@@ -850,8 +890,8 @@ public MeuParser(ParserSharedInputState state) {
 		"\"faca\"",
 		"\"Mais\"",
 		"\"Menos\"",
-		"\"MultiplicaPor\"",
-		"\"DividePor\"",
+		"\"MultiplicadoPor\"",
+		"\"DivididoPor\"",
 		"\"ElevadoA\"",
 		"\"eMenorQue\"",
 		"\"eMaiorQue\"",
@@ -913,17 +953,17 @@ public MeuParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_9 = new BitSet(mk_tokenSet_9());
 	private static final long[] mk_tokenSet_10() {
-		long[] data = { 805306434L, 0L};
+		long[] data = { 813699138L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_10 = new BitSet(mk_tokenSet_10());
 	private static final long[] mk_tokenSet_11() {
-		long[] data = { 805306432L, 0L};
+		long[] data = { 813699136L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_11 = new BitSet(mk_tokenSet_11());
 	private static final long[] mk_tokenSet_12() {
-		long[] data = { 4026531906L, 0L};
+		long[] data = { 4034924610L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_12 = new BitSet(mk_tokenSet_12());

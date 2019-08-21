@@ -26,8 +26,8 @@ T_num=26
 LITERAL_faca="faca"=27
 LITERAL_Mais="Mais"=28
 LITERAL_Menos="Menos"=29
-LITERAL_MultiplicaPor="MultiplicaPor"=30
-LITERAL_DividePor="DividePor"=31
+LITERAL_MultiplicadoPor="MultiplicadoPor"=30
+LITERAL_DivididoPor="DivididoPor"=31
 LITERAL_ElevadoA="ElevadoA"=32
 LITERAL_eMenorQue="eMenorQue"=33
 LITERAL_eMaiorQue="eMaiorQue"=34
