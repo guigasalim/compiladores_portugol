@@ -71,14 +71,14 @@ cmdIf       : "se" T_ap termBool T_fp "entao" T_cha bloco  T_chf (cmdElse)?
 cmdElse     : "senao" T_cha bloco  T_chf
             ;
             
-termBool    : fator opBool
+termBool    : fator opBool fator
             ;
 opBool      :  (cmdLt|cmdGt|cmdNe|cmdGtig|cmdLtig|cmdEq)
             ;
 
 cmdWhile    : "enquanto" T_ap termBool T_fp T_cha bloco  T_chf
 	        ;
-cmdFor      : "para" T_ap cmdAttr T_pontVirg T_Id
+cmdFor      : "para" T_ap declara T_pontVirg T_Id
                                                 {
                                                     if (mapVar.get(LT(0).getText()) == null){
                                                             throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
