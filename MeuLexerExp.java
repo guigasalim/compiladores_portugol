@@ -1,4 +1,4 @@
-// $ANTLR 2.7.6 (20190807): "gramatica.g" -> "MeuLexer.java"$
+// $ANTLR 2.7.6 (20190807): "gramatica.g" -> "MeuLexerExp.java"$
 
 import java.io.InputStream;
 import antlr.TokenStreamException;
@@ -24,18 +24,18 @@ import antlr.LexerSharedInputState;
 import antlr.collections.impl.BitSet;
 import antlr.SemanticException;
 
-public class MeuLexer extends antlr.CharScanner implements MeuParserExpTokenTypes, TokenStream
+public class MeuLexerExp extends antlr.CharScanner implements MeuParserExpTokenTypes, TokenStream
  {
-public MeuLexer(InputStream in) {
+public MeuLexerExp(InputStream in) {
 	this(new ByteBuffer(in));
 }
-public MeuLexer(Reader in) {
+public MeuLexerExp(Reader in) {
 	this(new CharBuffer(in));
 }
-public MeuLexer(InputBuffer ib) {
+public MeuLexerExp(InputBuffer ib) {
 	this(new LexerSharedInputState(ib));
 }
-public MeuLexer(LexerSharedInputState state) {
+public MeuLexerExp(LexerSharedInputState state) {
 	super(state);
 	caseSensitiveLiterals = true;
 	setCaseSensitive(true);

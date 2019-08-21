@@ -1,4 +1,4 @@
-// $ANTLR 2.7.6 (20190807): "gramatica.g" -> "MeuParser.java"$
+// $ANTLR 2.7.6 (20190807): "gramatica.g" -> "MeuParserExp.java"$
 
 import antlr.TokenBuffer;
 import antlr.TokenStreamException;
@@ -14,7 +14,7 @@ import antlr.SemanticException;
 import antlr.ParserSharedInputState;
 import antlr.collections.impl.BitSet;
 
-public class MeuParser extends antlr.LLkParser       implements MeuParserTokenTypes
+public class MeuParserExp extends antlr.LLkParser       implements MeuParserExpTokenTypes
  {
 
  Expression expression;
@@ -25,25 +25,25 @@ public class MeuParser extends antlr.LLkParser       implements MeuParserTokenTy
    char op;
 java.util.HashMap<String, String> mapVar;
 
-protected MeuParser(TokenBuffer tokenBuf, int k) {
+protected MeuParserExp(TokenBuffer tokenBuf, int k) {
   super(tokenBuf,k);
   tokenNames = _tokenNames;
 }
 
-public MeuParser(TokenBuffer tokenBuf) {
+public MeuParserExp(TokenBuffer tokenBuf) {
   this(tokenBuf,1);
 }
 
-protected MeuParser(TokenStream lexer, int k) {
+protected MeuParserExp(TokenStream lexer, int k) {
   super(lexer,k);
   tokenNames = _tokenNames;
 }
 
-public MeuParser(TokenStream lexer) {
+public MeuParserExp(TokenStream lexer) {
   this(lexer,1);
 }
 
-public MeuParser(ParserSharedInputState state) {
+public MeuParserExp(ParserSharedInputState state) {
   super(state,1);
   tokenNames = _tokenNames;
 }

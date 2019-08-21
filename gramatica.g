@@ -1,6 +1,11 @@
-class MeuParser extends Parser;
+class MeuParserExp extends Parser;
 {
-
+ Expression expression;
+   AbstractOperand num;
+   BinaryOperand sumOrSubt;
+   AbstractOperand parent;
+   BinaryOperand multOrDiv;
+   char op;
 java.util.HashMap<String, String> mapVar;
 }
 
@@ -94,9 +99,47 @@ cmdSwitch   : "escolha" T_ap T_Id
                                 
                                 T_fp T_cha ("caso" (T_num|T_texto) "faca" bloco )+ T_chf
 	        ;
-expr        :  termo (cmdSoma | cmdSubt)*  
+expr        : {expression = new Expression();}  expr_c T_pontof
+                    {
+                        if (expression.getRoot() == null) expression.setRoot(num);
+                        expression.eval();
+                        System.out.println(expression);
+                        System.out.println(expression.getRoot().toXml());
+                    } 
             ;
 
+expr_c        :  termo (cmdSoma 
+                     { 
+                     if(expression.getRoot() == null){
+                        sumOrSubt.setRight(num);
+                        expression.setRoot(sumOrSubt);
+                        parent = sumOrSubt;
+                     }
+                     else{
+                         sumOrSubt = new BinaryOperand(op);
+                         sumOrSubt.setRight(num);
+                         BinaryOperand pai = (BinaryOperand)parent;
+                         sumOrSubt.setLeft(pai.getRight());
+                         pai.setRight(sumOrSubt);
+                     }
+                  }
+                   | cmdSubt
+                    
+                      { 
+                     if(expression.getRoot() == null){
+                        sumOrSubt.setRight(num);
+                        expression.setRoot(sumOrSubt);
+                        parent = sumOrSubt;
+                     }
+                     else{
+                         sumOrSubt = new BinaryOperand(op);
+                         sumOrSubt.setRight(num);
+                         BinaryOperand pai = (BinaryOperand)parent;
+                         sumOrSubt.setLeft(pai.getRight());
+                         pai.setRight(sumOrSubt);
+                     }
+                  })* 
+            ;            
 termo       :  fator (cmdMult|cmdDivi)*
             ;
 
@@ -108,12 +151,26 @@ fator       :  T_Id
                                     }
                     }
                 
-                | T_num | T_ap expr T_fp
+                | T_num 
+                { num = new UnaryOperand(Float.parseFloat(LT(0).getText()));
+                }
+                | T_ap expr T_fp
             ;
             
-cmdSoma : "Mais" termo
+cmdSoma :  "Mais"
+                    {   op = '+';
+                        sumOrSubt = new BinaryOperand(op);
+                    sumOrSubt.setLeft(num);}
+            
+            termo
+          
         ;
-cmdSubt : "Menos" termo
+cmdSubt : "Menos"
+            {op='-';
+            sumOrSubt = new BinaryOperand('-');
+                                sumOrSubt.setLeft(num);} 
+            termo
+            
         ;
 cmdMult : "MultiplicaPor" fator
         ;
@@ -139,7 +196,7 @@ cmdNe	    : "eDiferenteDe" fator
 	        
 cmdEq        : "eIgualQue" fator
             ;
-class MeuLexer extends Lexer;
+class MeuLexerExp extends Lexer;
 
 options{
     caseSensitive = true;

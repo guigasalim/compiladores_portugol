@@ -1,12 +1,11 @@
 programa
 declare a,b,c.
 escreva ('Meu primeiro programa em IsI').
+leia(a).
 leia(b).
-escreva('O resultado da soma vale').
-
 
 leia(c).
-leia(s).
+
 
 c recebe a Mais b.
 
@@ -22,7 +21,7 @@ leia(s).
 } 
 senao{
 
-
+c recebe b Mais 5 Mais 3 Menos a Mais 45.
 
 }.
 
