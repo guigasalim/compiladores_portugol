@@ -43,32 +43,31 @@ public MeuLexer(LexerSharedInputState state) {
 	literals.put(new ANTLRHashString("Inteiro", this), new Integer(12));
 	literals.put(new ANTLRHashString("programa", this), new Integer(4));
 	literals.put(new ANTLRHashString("senao", this), new Integer(24));
-	literals.put(new ANTLRHashString("ElevadoA", this), new Integer(35));
-	literals.put(new ANTLRHashString("eIgualQue", this), new Integer(41));
-	literals.put(new ANTLRHashString("Mais", this), new Integer(31));
+	literals.put(new ANTLRHashString("ElevadoA", this), new Integer(34));
+	literals.put(new ANTLRHashString("eIgualQue", this), new Integer(40));
+	literals.put(new ANTLRHashString("Mais", this), new Integer(30));
 	literals.put(new ANTLRHashString("leia", this), new Integer(14));
-	literals.put(new ANTLRHashString("eMenorQue", this), new Integer(36));
-	literals.put(new ANTLRHashString("DivididoPor", this), new Integer(34));
+	literals.put(new ANTLRHashString("eMenorQue", this), new Integer(35));
+	literals.put(new ANTLRHashString("DivididoPor", this), new Integer(33));
 	literals.put(new ANTLRHashString("fimprog", this), new Integer(5));
 	literals.put(new ANTLRHashString("Decimal", this), new Integer(13));
 	literals.put(new ANTLRHashString("se", this), new Integer(20));
-	literals.put(new ANTLRHashString("caso", this), new Integer(29));
+	literals.put(new ANTLRHashString("caso", this), new Integer(28));
 	literals.put(new ANTLRHashString("escreva", this), new Integer(17));
 	literals.put(new ANTLRHashString("declare", this), new Integer(7));
-	literals.put(new ANTLRHashString("para", this), new Integer(27));
-	literals.put(new ANTLRHashString("eMaiorEIgualQue", this), new Integer(39));
-	literals.put(new ANTLRHashString("Menos", this), new Integer(32));
-	literals.put(new ANTLRHashString("escolha", this), new Integer(28));
-	literals.put(new ANTLRHashString("MultiplicadoPor", this), new Integer(33));
-	literals.put(new ANTLRHashString("eDiferenteDe", this), new Integer(40));
+	literals.put(new ANTLRHashString("eMaiorEIgualQue", this), new Integer(38));
+	literals.put(new ANTLRHashString("Menos", this), new Integer(31));
+	literals.put(new ANTLRHashString("escolha", this), new Integer(27));
+	literals.put(new ANTLRHashString("MultiplicadoPor", this), new Integer(32));
+	literals.put(new ANTLRHashString("eDiferenteDe", this), new Integer(39));
 	literals.put(new ANTLRHashString("recebe", this), new Integer(19));
 	literals.put(new ANTLRHashString("como", this), new Integer(8));
 	literals.put(new ANTLRHashString("entao", this), new Integer(21));
 	literals.put(new ANTLRHashString("String", this), new Integer(9));
 	literals.put(new ANTLRHashString("faca", this), new Integer(26));
-	literals.put(new ANTLRHashString("eMaiorQue", this), new Integer(37));
+	literals.put(new ANTLRHashString("eMaiorQue", this), new Integer(36));
 	literals.put(new ANTLRHashString("enquanto", this), new Integer(25));
-	literals.put(new ANTLRHashString("eMenorEIgualQue", this), new Integer(38));
+	literals.put(new ANTLRHashString("eMenorEIgualQue", this), new Integer(37));
 }
 
 public Token nextToken() throws TokenStreamException {
@@ -224,7 +223,7 @@ tryAgain:
 		}
 		}
 		{
-		_loop56:
+		_loop54:
 		do {
 			switch ( LA(1)) {
 			case 'a':  case 'b':  case 'c':  case 'd':
@@ -258,7 +257,7 @@ tryAgain:
 			}
 			default:
 			{
-				break _loop56;
+				break _loop54;
 			}
 			}
 		} while (true);
@@ -367,34 +366,34 @@ tryAgain:
 		int _saveIndex;
 		
 		{
-		int _cnt66=0;
-		_loop66:
+		int _cnt64=0;
+		_loop64:
 		do {
 			if (((LA(1) >= '0' && LA(1) <= '9'))) {
 				matchRange('0','9');
 			}
 			else {
-				if ( _cnt66>=1 ) { break _loop66; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
+				if ( _cnt64>=1 ) { break _loop64; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
 			}
 			
-			_cnt66++;
+			_cnt64++;
 		} while (true);
 		}
 		{
 		if ((LA(1)=='.')) {
 			mT_pontof(false);
 			{
-			int _cnt69=0;
-			_loop69:
+			int _cnt67=0;
+			_loop67:
 			do {
 				if (((LA(1) >= '0' && LA(1) <= '9'))) {
 					matchRange('0','9');
 				}
 				else {
-					if ( _cnt69>=1 ) { break _loop69; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
+					if ( _cnt67>=1 ) { break _loop67; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
 				}
 				
-				_cnt69++;
+				_cnt67++;
 			} while (true);
 			}
 		}
@@ -416,8 +415,8 @@ tryAgain:
 		
 		match('"');
 		{
-		int _cnt72=0;
-		_loop72:
+		int _cnt70=0;
+		_loop70:
 		do {
 			switch ( LA(1)) {
 			case 'a':  case 'b':  case 'c':  case 'd':
@@ -456,10 +455,10 @@ tryAgain:
 			}
 			default:
 			{
-				if ( _cnt72>=1 ) { break _loop72; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
+				if ( _cnt70>=1 ) { break _loop70; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
 			}
 			}
-			_cnt72++;
+			_cnt70++;
 		} while (true);
 		}
 		match('"');

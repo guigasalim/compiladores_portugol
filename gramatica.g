@@ -123,7 +123,6 @@ cmd         :  cmdLeia T_pontVirg
             |  cmdEscreva T_pontVirg
             |  cmdAttr  T_pontVirg
 	        |  cmdIf 
-            |  cmdFor 
             |  cmdSwitch 
             |  cmdWhile
             ;
