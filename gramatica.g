@@ -10,6 +10,9 @@ class MeuParser extends Parser;
     double confirmaDouble;
     String tipo;
     String comparaTipo;
+    String conteudoAtr;
+    String idVar;
+    String conteudoBool;
    Programa p;
 
     public void setPrograma(String name){
@@ -30,7 +33,7 @@ prog        : {mapVarInt = new java.util.HashMap<String, String>();
                 mapVarDouble = new java.util.HashMap<String, String>();
                 mapVarString = new java.util.HashMap<String, String>();
                 mapVarTipo = new java.util.HashMap<String, String>();
-                } "programa" (declara)+ bloco "fimprog" T_pontof
+                } "programa" (declara)+ bloco "fimprog" T_pontVirg
             ;
     
 declara     :  "declare" "como" tipo 
@@ -59,7 +62,7 @@ tipo	:
                         System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
                        System.out.println("Variavel " + LT(0).getText() + " salva!");
                 }
-            )* T_pontof
+            )* T_pontVirg
                 {p.setVariaveisString(mapVarString.values());}
             |"Inteiro"
                 
@@ -85,7 +88,7 @@ tipo	:
                         System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
                 System.out.println("Variavel " + LT(0).getText() + " salva!");
                 }
-            )* T_pontof
+            )* T_pontVirg
                 {p.setVariaveisInt(mapVarInt.values());}
             |"Decimal"
                 {
@@ -109,7 +112,7 @@ tipo	:
                         System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
                   System.out.println("Variavel " + LT(0).getText() + " salva!");
                                     }
-            )* T_pontof{p.setVariaveisDouble(mapVarDouble.values());}  
+            )* T_pontVirg{p.setVariaveisDouble(mapVarDouble.values());}  
 
 	 {
 		      
@@ -122,12 +125,13 @@ tipo	:
 bloco       :  (cmd)+
             ;
     
-cmd         :  cmdLeia T_pontof
-            |  cmdEscreva T_pontof
-            |  cmdAttr  T_pontof
+cmd         :  cmdLeia T_pontVirg
+            |  cmdEscreva T_pontVirg
+            |  cmdAttr  T_pontVirg
 	        |  cmdIf 
             |  cmdFor 
             |  cmdSwitch 
+            |  cmdWhile
             ;
     
 cmdLeia     :  "leia" T_ap 
@@ -159,10 +163,13 @@ cmdAttr     :  T_Id
                                 throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
                                     
                                     }else {comparaTipo = mapVarTipo.get(LT(0).getText());
+                                            idVar = LT(0).getText();
                                         
                                      }       
                                 } 
-                "recebe" (expr|
+                "recebe" 
+                    {conteudoAtr = "";}
+                (expr|
                                 {
                                 if(comparaTipo != "Inteiro"||comparaTipo != "Decimal"){
                                 throw new RuntimeException("ERRO ID " + LT(0).getText() + " declarado como "+ comparaTipo + " sendo uma String");
@@ -177,28 +184,62 @@ cmdAttr     :  T_Id
                                 {
                                 if(comparaTipo != "String"){
                                 throw new RuntimeException("ERRO ID " + LT(0).getText() + " declarado como "+ comparaTipo + "não sendo uma String");
+                                                         
+                                }
+                                conteudoAtr = LT(0).getText();
+                                conteudoAtr = conteudoAtr.replace("\"","");
+       
                                 
                                 }
                                 
                                 
+                                ){  p.addCommand(new CmdAtribuir(idVar,conteudoAtr));
+                                    conteudoAtr = "";
+                                    idVar = "";
                                 }
-                                
-                                
-                                )
             ;
 
-cmdIf       : "se" T_ap termBool T_fp "entao" T_cha bloco  T_chf (cmdElse)?
+cmdIf       : "se" T_ap termBool T_fp "entao" T_cha{
+                                                    
+                                                    p.addCommand(new CmdSe(conteudoBool));
+                                                    conteudoBool = "";
+                                                    } 
+                bloco  T_chf{
+                            
+                            p.addCommand(new CmdClose(LT(0).getText()));} (cmdElse)?
             ;
 
-cmdElse     : "senao" T_cha bloco  T_chf
+cmdElse     : "senao" T_cha 
+                      {
+                                                    
+                    p.addCommand(new CmdSenao());
+                   
+                    } 
+                    
+                    bloco  T_chf{
+                            
+                            p.addCommand(new CmdClose(LT(0).getText()));}
             ;
             
-termBool    : fator opBool 
+            
+termBool    : {conteudoBool = "";}fator {
+                    conteudoBool = conteudoBool + LT(0).getText();
+                    System.out.println("O token anterior é: "+LT(0).getText());
+                    
+                    } opBool 
             ;
 opBool      :  (cmdLt|cmdGt|cmdNe|cmdGtig|cmdLtig|cmdEq)
             ;
 
-cmdWhile    : "enquanto" T_ap termBool T_fp T_cha bloco  T_chf
+cmdWhile    : "enquanto" T_ap termBool T_fp "faca"
+                           {
+                                                    
+                    p.addCommand(new CmdEnquanto(conteudoBool));
+                    conteudoBool = "";
+                    } 
+                        T_cha bloco  T_chf {
+                            
+                            p.addCommand(new CmdClose(LT(0).getText()));}
 	        ;
 cmdFor      : "para" T_ap declara T_pontVirg T_Id
                                                 {
@@ -311,14 +352,16 @@ fator       :  T_Id
                 
                 | T_num 
                 { num = new UnaryOperand(Float.parseFloat(LT(0).getText()));
+                        conteudoAtr = conteudoAtr + LT(0).getText();
                 }
-                | T_ap expr  
-                  T_fp
+                | T_ap{conteudoAtr = conteudoAtr + LT(0).getText();} expr  
+                  T_fp{conteudoAtr = conteudoAtr + LT(0).getText();}
                   				 
             ;
             
-cmdSoma :  "Mais"
+cmdSoma :  "Mais" 
                     {   op = '+';
+                    conteudoAtr = conteudoAtr + op;
                         sumOrSubt = new BinaryOperand(op);
                     sumOrSubt.setLeft(num);}
             
@@ -327,39 +370,44 @@ cmdSoma :  "Mais"
         ;
 cmdSubt : "Menos"
             {
-op='-';
+            op='-';
+            conteudoAtr = conteudoAtr + op;
             sumOrSubt = new BinaryOperand(op);
                                 sumOrSubt.setLeft(num);} 
             termo
             
         ;
-cmdMult : "MultiplicadoPor"{op='*';
+cmdMult : "MultiplicadoPor"{
+            op='*';
+            conteudoAtr = conteudoAtr + op;
             multOrDiv = new BinaryOperand(op);
                                 multOrDiv.setLeft(num);} fator
         ;
-cmdDivi : "DivididoPor"{op='/';
+cmdDivi : "DivididoPor"{
+            op='/';
+            conteudoAtr = conteudoAtr + op;
             multOrDiv = new BinaryOperand(op);
                                 multOrDiv.setLeft(num);} fator
         ;
 cmdElev : "ElevadoA" termo
         ;
 
-cmdLt	    : "eMenorQue" fator
+cmdLt	    : "eMenorQue" fator   {conteudoBool =conteudoBool+ "<"+ LT(0).getText();}
 	        ;
 
-cmdGt	    : "eMaiorQue" fator
+cmdGt	    : "eMaiorQue" fator   {conteudoBool =conteudoBool+ ">"+ LT(0).getText();}
 	        ;
 
-cmdLtig      : "eMenorEIgualQue" fator
+cmdLtig      : "eMenorEIgualQue" fator {conteudoBool =conteudoBool+ "<="+ LT(0).getText();}
             ;
             
-cmdGtig      : "eMaiorEIgualQue" fator
+cmdGtig      : "eMaiorEIgualQue" fator {conteudoBool =conteudoBool+ ">="+ LT(0).getText();}
             ;	        
 	        
-cmdNe	    : "eDiferenteDe" fator
+cmdNe	    : "eDiferenteDe" fator {conteudoBool =conteudoBool+  "!="+ LT(0).getText();}
 	        ;  
 	        
-cmdEq        : "eIgualQue" fator
+cmdEq        : "eIgualQue" fator {conteudoBool =conteudoBool+ "=="+ LT(0).getText();}
             ;
 class MeuLexer extends Lexer;
 
@@ -397,7 +445,7 @@ T_cha	    : '{'
 T_chf	    : '}'
 	        ;
 
-T_num       : ('0'..'9')+(T_virg ('0'..'9')+)?
+T_num       : ('0'..'9')+(T_pontof ('0'..'9')+)?
             ;
     
 

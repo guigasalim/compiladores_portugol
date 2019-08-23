@@ -27,6 +27,9 @@ public class MeuParser extends antlr.LLkParser       implements MeuParserTokenTy
     double confirmaDouble;
     String tipo;
     String comparaTipo;
+    String conteudoAtr;
+    String idVar;
+    String conteudoBool;
    Programa p;
 
     public void setPrograma(String name){
@@ -90,7 +93,7 @@ public MeuParser(ParserSharedInputState state) {
 			}
 			bloco();
 			match(LITERAL_fimprog);
-			match(T_pontof);
+			match(T_pontVirg);
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
@@ -177,7 +180,7 @@ public MeuParser(ParserSharedInputState state) {
 					
 				} while (true);
 				}
-				match(T_pontof);
+				match(T_pontVirg);
 				p.setVariaveisString(mapVarString.values());
 				break;
 			}
@@ -217,7 +220,7 @@ public MeuParser(ParserSharedInputState state) {
 					
 				} while (true);
 				}
-				match(T_pontof);
+				match(T_pontVirg);
 				p.setVariaveisInt(mapVarInt.values());
 				break;
 			}
@@ -257,7 +260,7 @@ public MeuParser(ParserSharedInputState state) {
 					
 				} while (true);
 				}
-				match(T_pontof);
+				match(T_pontVirg);
 				p.setVariaveisDouble(mapVarDouble.values());
 				
 						      
@@ -285,19 +288,19 @@ public MeuParser(ParserSharedInputState state) {
 			case LITERAL_leia:
 			{
 				cmdLeia();
-				match(T_pontof);
+				match(T_pontVirg);
 				break;
 			}
 			case LITERAL_escreva:
 			{
 				cmdEscreva();
-				match(T_pontof);
+				match(T_pontVirg);
 				break;
 			}
 			case T_Id:
 			{
 				cmdAttr();
-				match(T_pontof);
+				match(T_pontVirg);
 				break;
 			}
 			case LITERAL_se:
@@ -313,6 +316,11 @@ public MeuParser(ParserSharedInputState state) {
 			case LITERAL_escolha:
 			{
 				cmdSwitch();
+				break;
+			}
+			case LITERAL_enquanto:
+			{
+				cmdWhile();
 				break;
 			}
 			default:
@@ -399,10 +407,12 @@ public MeuParser(ParserSharedInputState state) {
 			throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
 			
 			}else {comparaTipo = mapVarTipo.get(LT(0).getText());
+			idVar = LT(0).getText();
 			
 			}       
 			
 			match(LITERAL_recebe);
+			conteudoAtr = "";
 			{
 			switch ( LA(1)) {
 			case T_Id:
@@ -428,6 +438,8 @@ public MeuParser(ParserSharedInputState state) {
 				throw new RuntimeException("ERRO ID " + LT(0).getText() + " declarado como "+ comparaTipo + "não sendo uma String");
 				
 				}
+				conteudoAtr = LT(0).getText();
+				conteudoAtr = conteudoAtr.replace("\"","");
 				
 				
 				
@@ -439,6 +451,10 @@ public MeuParser(ParserSharedInputState state) {
 			}
 			}
 			}
+			p.addCommand(new CmdAtribuir(idVar,conteudoAtr));
+			conteudoAtr = "";
+			idVar = "";
+			
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
@@ -456,8 +472,16 @@ public MeuParser(ParserSharedInputState state) {
 			match(T_fp);
 			match(LITERAL_entao);
 			match(T_cha);
+			
+			
+			p.addCommand(new CmdSe(conteudoBool));
+			conteudoBool = "";
+			
 			bloco();
 			match(T_chf);
+			
+			
+			p.addCommand(new CmdClose(LT(0).getText()));
 			{
 			switch ( LA(1)) {
 			case LITERAL_senao:
@@ -471,6 +495,7 @@ public MeuParser(ParserSharedInputState state) {
 			case LITERAL_escreva:
 			case LITERAL_se:
 			case T_chf:
+			case LITERAL_enquanto:
 			case LITERAL_para:
 			case LITERAL_escolha:
 			case LITERAL_caso:
@@ -609,6 +634,33 @@ public MeuParser(ParserSharedInputState state) {
 		}
 	}
 	
+	public final void cmdWhile() throws RecognitionException, TokenStreamException {
+		
+		
+		try {      // for error handling
+			match(LITERAL_enquanto);
+			match(T_ap);
+			termBool();
+			match(T_fp);
+			match(LITERAL_faca);
+			
+			
+			p.addCommand(new CmdEnquanto(conteudoBool));
+			conteudoBool = "";
+			
+			match(T_cha);
+			bloco();
+			match(T_chf);
+			
+			
+			p.addCommand(new CmdClose(LT(0).getText()));
+		}
+		catch (RecognitionException ex) {
+			reportError(ex);
+			recover(ex,_tokenSet_4);
+		}
+	}
+	
 	public final void expr() throws RecognitionException, TokenStreamException {
 		
 		
@@ -632,7 +684,13 @@ public MeuParser(ParserSharedInputState state) {
 		
 		
 		try {      // for error handling
+			conteudoBool = "";
 			fator();
+			
+			conteudoBool = conteudoBool + LT(0).getText();
+			System.out.println("O token anterior é: "+LT(0).getText());
+			
+			
 			opBool();
 		}
 		catch (RecognitionException ex) {
@@ -647,8 +705,16 @@ public MeuParser(ParserSharedInputState state) {
 		try {      // for error handling
 			match(LITERAL_senao);
 			match(T_cha);
+			
+			
+			p.addCommand(new CmdSenao());
+			
+			
 			bloco();
 			match(T_chf);
+			
+			
+			p.addCommand(new CmdClose(LT(0).getText()));
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
@@ -676,14 +742,17 @@ public MeuParser(ParserSharedInputState state) {
 			{
 				match(T_num);
 				num = new UnaryOperand(Float.parseFloat(LT(0).getText()));
+				conteudoAtr = conteudoAtr + LT(0).getText();
 				
 				break;
 			}
 			case T_ap:
 			{
 				match(T_ap);
+				conteudoAtr = conteudoAtr + LT(0).getText();
 				expr();
 				match(T_fp);
+				conteudoAtr = conteudoAtr + LT(0).getText();
 				break;
 			}
 			default:
@@ -753,6 +822,7 @@ public MeuParser(ParserSharedInputState state) {
 		try {      // for error handling
 			match(LITERAL_eMenorQue);
 			fator();
+			conteudoBool =conteudoBool+ "<"+ LT(0).getText();
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
@@ -766,6 +836,7 @@ public MeuParser(ParserSharedInputState state) {
 		try {      // for error handling
 			match(LITERAL_eMaiorQue);
 			fator();
+			conteudoBool =conteudoBool+ ">"+ LT(0).getText();
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
@@ -779,6 +850,7 @@ public MeuParser(ParserSharedInputState state) {
 		try {      // for error handling
 			match(LITERAL_eDiferenteDe);
 			fator();
+			conteudoBool =conteudoBool+  "!="+ LT(0).getText();
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
@@ -792,6 +864,7 @@ public MeuParser(ParserSharedInputState state) {
 		try {      // for error handling
 			match(LITERAL_eMaiorEIgualQue);
 			fator();
+			conteudoBool =conteudoBool+ ">="+ LT(0).getText();
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
@@ -805,6 +878,7 @@ public MeuParser(ParserSharedInputState state) {
 		try {      // for error handling
 			match(LITERAL_eMenorEIgualQue);
 			fator();
+			conteudoBool =conteudoBool+ "<="+ LT(0).getText();
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
@@ -818,28 +892,11 @@ public MeuParser(ParserSharedInputState state) {
 		try {      // for error handling
 			match(LITERAL_eIgualQue);
 			fator();
+			conteudoBool =conteudoBool+ "=="+ LT(0).getText();
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
 			recover(ex,_tokenSet_7);
-		}
-	}
-	
-	public final void cmdWhile() throws RecognitionException, TokenStreamException {
-		
-		
-		try {      // for error handling
-			match(LITERAL_enquanto);
-			match(T_ap);
-			termBool();
-			match(T_fp);
-			match(T_cha);
-			bloco();
-			match(T_chf);
-		}
-		catch (RecognitionException ex) {
-			reportError(ex);
-			recover(ex,_tokenSet_0);
 		}
 	}
 	
@@ -971,6 +1028,7 @@ public MeuParser(ParserSharedInputState state) {
 		try {      // for error handling
 			match(LITERAL_Mais);
 			op = '+';
+			conteudoAtr = conteudoAtr + op;
 			sumOrSubt = new BinaryOperand(op);
 			sumOrSubt.setLeft(num);
 			termo();
@@ -988,6 +1046,7 @@ public MeuParser(ParserSharedInputState state) {
 			match(LITERAL_Menos);
 			
 			op='-';
+			conteudoAtr = conteudoAtr + op;
 			sumOrSubt = new BinaryOperand(op);
 			sumOrSubt.setLeft(num);
 			termo();
@@ -1003,7 +1062,9 @@ public MeuParser(ParserSharedInputState state) {
 		
 		try {      // for error handling
 			match(LITERAL_MultiplicadoPor);
+			
 			op='*';
+			conteudoAtr = conteudoAtr + op;
 			multOrDiv = new BinaryOperand(op);
 			multOrDiv.setLeft(num);
 			fator();
@@ -1019,7 +1080,9 @@ public MeuParser(ParserSharedInputState state) {
 		
 		try {      // for error handling
 			match(LITERAL_DivididoPor);
+			
 			op='/';
+			conteudoAtr = conteudoAtr + op;
 			multOrDiv = new BinaryOperand(op);
 			multOrDiv.setLeft(num);
 			fator();
@@ -1051,7 +1114,7 @@ public MeuParser(ParserSharedInputState state) {
 		"NULL_TREE_LOOKAHEAD",
 		"\"programa\"",
 		"\"fimprog\"",
-		"T_pontof",
+		"T_pontVirg",
 		"\"declare\"",
 		"\"como\"",
 		"\"String\"",
@@ -1071,12 +1134,11 @@ public MeuParser(ParserSharedInputState state) {
 		"T_chf",
 		"\"senao\"",
 		"\"enquanto\"",
+		"\"faca\"",
 		"\"para\"",
-		"T_pontVirg",
 		"\"escolha\"",
 		"\"caso\"",
 		"T_num",
-		"\"faca\"",
 		"\"Mais\"",
 		"\"Menos\"",
 		"\"MultiplicadoPor\"",
@@ -1088,6 +1150,7 @@ public MeuParser(ParserSharedInputState state) {
 		"\"eMaiorEIgualQue\"",
 		"\"eDiferenteDe\"",
 		"\"eIgualQue\"",
+		"T_pontof",
 		"T_blank"
 	};
 	
@@ -1097,12 +1160,12 @@ public MeuParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_0 = new BitSet(mk_tokenSet_0());
 	private static final long[] mk_tokenSet_1() {
-		long[] data = { 470959232L, 0L};
+		long[] data = { 437404864L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_1 = new BitSet(mk_tokenSet_1());
 	private static final long[] mk_tokenSet_2() {
-		long[] data = { 336741376L, 0L};
+		long[] data = { 437404672L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_2 = new BitSet(mk_tokenSet_2());
@@ -1112,7 +1175,7 @@ public MeuParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_3 = new BitSet(mk_tokenSet_3());
 	private static final long[] mk_tokenSet_4() {
-		long[] data = { 882000928L, 0L};
+		long[] data = { 982664224L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_4 = new BitSet(mk_tokenSet_4());
@@ -1132,7 +1195,7 @@ public MeuParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_7 = new BitSet(mk_tokenSet_7());
 	private static final long[] mk_tokenSet_8() {
-		long[] data = { 8724286637122L, 0L};
+		long[] data = { 4362613130306L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_8 = new BitSet(mk_tokenSet_8());
@@ -1142,17 +1205,17 @@ public MeuParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_9 = new BitSet(mk_tokenSet_9());
 	private static final long[] mk_tokenSet_10() {
-		long[] data = { 12884967490L, 0L};
+		long[] data = { 6442516546L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_10 = new BitSet(mk_tokenSet_10());
 	private static final long[] mk_tokenSet_11() {
-		long[] data = { 12884967488L, 0L};
+		long[] data = { 6442516544L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_11 = new BitSet(mk_tokenSet_11());
 	private static final long[] mk_tokenSet_12() {
-		long[] data = { 64424575042L, 0L};
+		long[] data = { 32212320322L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_12 = new BitSet(mk_tokenSet_12());

@@ -43,32 +43,32 @@ public MeuLexer(LexerSharedInputState state) {
 	literals.put(new ANTLRHashString("Inteiro", this), new Integer(12));
 	literals.put(new ANTLRHashString("programa", this), new Integer(4));
 	literals.put(new ANTLRHashString("senao", this), new Integer(24));
-	literals.put(new ANTLRHashString("ElevadoA", this), new Integer(36));
-	literals.put(new ANTLRHashString("eIgualQue", this), new Integer(42));
-	literals.put(new ANTLRHashString("Mais", this), new Integer(32));
+	literals.put(new ANTLRHashString("ElevadoA", this), new Integer(35));
+	literals.put(new ANTLRHashString("eIgualQue", this), new Integer(41));
+	literals.put(new ANTLRHashString("Mais", this), new Integer(31));
 	literals.put(new ANTLRHashString("leia", this), new Integer(14));
-	literals.put(new ANTLRHashString("eMenorQue", this), new Integer(37));
-	literals.put(new ANTLRHashString("DivididoPor", this), new Integer(35));
+	literals.put(new ANTLRHashString("eMenorQue", this), new Integer(36));
+	literals.put(new ANTLRHashString("DivididoPor", this), new Integer(34));
 	literals.put(new ANTLRHashString("fimprog", this), new Integer(5));
 	literals.put(new ANTLRHashString("Decimal", this), new Integer(13));
 	literals.put(new ANTLRHashString("se", this), new Integer(20));
 	literals.put(new ANTLRHashString("caso", this), new Integer(29));
 	literals.put(new ANTLRHashString("escreva", this), new Integer(17));
 	literals.put(new ANTLRHashString("declare", this), new Integer(7));
-	literals.put(new ANTLRHashString("para", this), new Integer(26));
-	literals.put(new ANTLRHashString("eMaiorEIgualQue", this), new Integer(40));
-	literals.put(new ANTLRHashString("Menos", this), new Integer(33));
+	literals.put(new ANTLRHashString("para", this), new Integer(27));
+	literals.put(new ANTLRHashString("eMaiorEIgualQue", this), new Integer(39));
+	literals.put(new ANTLRHashString("Menos", this), new Integer(32));
 	literals.put(new ANTLRHashString("escolha", this), new Integer(28));
-	literals.put(new ANTLRHashString("MultiplicadoPor", this), new Integer(34));
-	literals.put(new ANTLRHashString("eDiferenteDe", this), new Integer(41));
+	literals.put(new ANTLRHashString("MultiplicadoPor", this), new Integer(33));
+	literals.put(new ANTLRHashString("eDiferenteDe", this), new Integer(40));
 	literals.put(new ANTLRHashString("recebe", this), new Integer(19));
 	literals.put(new ANTLRHashString("como", this), new Integer(8));
 	literals.put(new ANTLRHashString("entao", this), new Integer(21));
 	literals.put(new ANTLRHashString("String", this), new Integer(9));
-	literals.put(new ANTLRHashString("eMaiorQue", this), new Integer(38));
-	literals.put(new ANTLRHashString("faca", this), new Integer(31));
+	literals.put(new ANTLRHashString("faca", this), new Integer(26));
+	literals.put(new ANTLRHashString("eMaiorQue", this), new Integer(37));
 	literals.put(new ANTLRHashString("enquanto", this), new Integer(25));
-	literals.put(new ANTLRHashString("eMenorEIgualQue", this), new Integer(39));
+	literals.put(new ANTLRHashString("eMenorEIgualQue", this), new Integer(38));
 }
 
 public Token nextToken() throws TokenStreamException {
@@ -381,8 +381,8 @@ tryAgain:
 		} while (true);
 		}
 		{
-		if ((LA(1)==',')) {
-			mT_virg(false);
+		if ((LA(1)=='.')) {
+			mT_pontof(false);
 			{
 			int _cnt69=0;
 			_loop69:
