@@ -40,31 +40,35 @@ public MeuLexer(LexerSharedInputState state) {
 	caseSensitiveLiterals = true;
 	setCaseSensitive(true);
 	literals = new Hashtable();
+	literals.put(new ANTLRHashString("Inteiro", this), new Integer(12));
 	literals.put(new ANTLRHashString("programa", this), new Integer(4));
-	literals.put(new ANTLRHashString("senao", this), new Integer(20));
-	literals.put(new ANTLRHashString("ElevadoA", this), new Integer(32));
-	literals.put(new ANTLRHashString("eIgualQue", this), new Integer(38));
-	literals.put(new ANTLRHashString("Mais", this), new Integer(28));
-	literals.put(new ANTLRHashString("leia", this), new Integer(10));
-	literals.put(new ANTLRHashString("eMenorQue", this), new Integer(33));
-	literals.put(new ANTLRHashString("DivididoPor", this), new Integer(31));
+	literals.put(new ANTLRHashString("senao", this), new Integer(24));
+	literals.put(new ANTLRHashString("ElevadoA", this), new Integer(36));
+	literals.put(new ANTLRHashString("eIgualQue", this), new Integer(42));
+	literals.put(new ANTLRHashString("Mais", this), new Integer(32));
+	literals.put(new ANTLRHashString("leia", this), new Integer(14));
+	literals.put(new ANTLRHashString("eMenorQue", this), new Integer(37));
+	literals.put(new ANTLRHashString("DivididoPor", this), new Integer(35));
 	literals.put(new ANTLRHashString("fimprog", this), new Integer(5));
-	literals.put(new ANTLRHashString("se", this), new Integer(16));
-	literals.put(new ANTLRHashString("caso", this), new Integer(25));
-	literals.put(new ANTLRHashString("escreva", this), new Integer(13));
+	literals.put(new ANTLRHashString("Decimal", this), new Integer(13));
+	literals.put(new ANTLRHashString("se", this), new Integer(20));
+	literals.put(new ANTLRHashString("caso", this), new Integer(29));
+	literals.put(new ANTLRHashString("escreva", this), new Integer(17));
 	literals.put(new ANTLRHashString("declare", this), new Integer(7));
-	literals.put(new ANTLRHashString("para", this), new Integer(22));
-	literals.put(new ANTLRHashString("eMaiorEIgualQue", this), new Integer(36));
-	literals.put(new ANTLRHashString("Menos", this), new Integer(29));
-	literals.put(new ANTLRHashString("escolha", this), new Integer(24));
-	literals.put(new ANTLRHashString("MultiplicadoPor", this), new Integer(30));
-	literals.put(new ANTLRHashString("eDiferenteDe", this), new Integer(37));
-	literals.put(new ANTLRHashString("recebe", this), new Integer(15));
-	literals.put(new ANTLRHashString("entao", this), new Integer(17));
-	literals.put(new ANTLRHashString("faca", this), new Integer(27));
-	literals.put(new ANTLRHashString("eMaiorQue", this), new Integer(34));
-	literals.put(new ANTLRHashString("enquanto", this), new Integer(21));
-	literals.put(new ANTLRHashString("eMenorEIgualQue", this), new Integer(35));
+	literals.put(new ANTLRHashString("para", this), new Integer(26));
+	literals.put(new ANTLRHashString("eMaiorEIgualQue", this), new Integer(40));
+	literals.put(new ANTLRHashString("Menos", this), new Integer(33));
+	literals.put(new ANTLRHashString("escolha", this), new Integer(28));
+	literals.put(new ANTLRHashString("MultiplicadoPor", this), new Integer(34));
+	literals.put(new ANTLRHashString("eDiferenteDe", this), new Integer(41));
+	literals.put(new ANTLRHashString("recebe", this), new Integer(19));
+	literals.put(new ANTLRHashString("como", this), new Integer(8));
+	literals.put(new ANTLRHashString("entao", this), new Integer(21));
+	literals.put(new ANTLRHashString("String", this), new Integer(9));
+	literals.put(new ANTLRHashString("eMaiorQue", this), new Integer(38));
+	literals.put(new ANTLRHashString("faca", this), new Integer(31));
+	literals.put(new ANTLRHashString("enquanto", this), new Integer(25));
+	literals.put(new ANTLRHashString("eMenorEIgualQue", this), new Integer(39));
 }
 
 public Token nextToken() throws TokenStreamException {
@@ -145,7 +149,7 @@ tryAgain:
 					theRetToken=_returnToken;
 					break;
 				}
-				case '\'':
+				case '"':
 				{
 					mT_texto(true);
 					theRetToken=_returnToken;
@@ -220,7 +224,7 @@ tryAgain:
 		}
 		}
 		{
-		_loop48:
+		_loop56:
 		do {
 			switch ( LA(1)) {
 			case 'a':  case 'b':  case 'c':  case 'd':
@@ -254,7 +258,7 @@ tryAgain:
 			}
 			default:
 			{
-				break _loop48;
+				break _loop56;
 			}
 			}
 		} while (true);
@@ -363,18 +367,40 @@ tryAgain:
 		int _saveIndex;
 		
 		{
-		int _cnt58=0;
-		_loop58:
+		int _cnt66=0;
+		_loop66:
 		do {
 			if (((LA(1) >= '0' && LA(1) <= '9'))) {
 				matchRange('0','9');
 			}
 			else {
-				if ( _cnt58>=1 ) { break _loop58; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
+				if ( _cnt66>=1 ) { break _loop66; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
 			}
 			
-			_cnt58++;
+			_cnt66++;
 		} while (true);
+		}
+		{
+		if ((LA(1)==',')) {
+			mT_virg(false);
+			{
+			int _cnt69=0;
+			_loop69:
+			do {
+				if (((LA(1) >= '0' && LA(1) <= '9'))) {
+					matchRange('0','9');
+				}
+				else {
+					if ( _cnt69>=1 ) { break _loop69; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
+				}
+				
+				_cnt69++;
+			} while (true);
+			}
+		}
+		else {
+		}
+		
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -388,10 +414,10 @@ tryAgain:
 		_ttype = T_texto;
 		int _saveIndex;
 		
-		match("'");
+		match('"');
 		{
-		int _cnt61=0;
-		_loop61:
+		int _cnt72=0;
+		_loop72:
 		do {
 			switch ( LA(1)) {
 			case 'a':  case 'b':  case 'c':  case 'd':
@@ -430,13 +456,13 @@ tryAgain:
 			}
 			default:
 			{
-				if ( _cnt61>=1 ) { break _loop61; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
+				if ( _cnt72>=1 ) { break _loop72; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
 			}
 			}
-			_cnt61++;
+			_cnt72++;
 		} while (true);
 		}
-		match("'");
+		match('"');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
 			_token.setText(new String(text.getBuffer(), _begin, text.length()-_begin));

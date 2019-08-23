@@ -23,7 +23,23 @@ public class MeuParser extends antlr.LLkParser       implements MeuParserTokenTy
    AbstractOperand parent;
    BinaryOperand multOrDiv;
    char op;
-java.util.HashMap<String, String> mapVar;
+    int confirmaInt;
+    double confirmaDouble;
+    String tipo;
+    String comparaTipo;
+   Programa p;
+
+    public void setPrograma(String name){
+      p = new Programa(name);
+    }
+  
+    public Programa getPrograma(){
+       return p;
+    }
+java.util.HashMap<String, String> mapVarInt;
+java.util.HashMap<String, String> mapVarDouble;
+java.util.HashMap<String, String> mapVarString;
+java.util.HashMap<String, String> mapVarTipo;
 
 protected MeuParser(TokenBuffer tokenBuf, int k) {
   super(tokenBuf,k);
@@ -52,9 +68,26 @@ public MeuParser(ParserSharedInputState state) {
 		
 		
 		try {      // for error handling
-			mapVar = new java.util.HashMap<String, String>();
+			mapVarInt = new java.util.HashMap<String, String>();
+			mapVarDouble = new java.util.HashMap<String, String>();
+			mapVarString = new java.util.HashMap<String, String>();
+			mapVarTipo = new java.util.HashMap<String, String>();
+			
 			match(LITERAL_programa);
-			declara();
+			{
+			int _cnt3=0;
+			_loop3:
+			do {
+				if ((LA(1)==LITERAL_declare)) {
+					declara();
+				}
+				else {
+					if ( _cnt3>=1 ) { break _loop3; } else {throw new NoViableAltException(LT(1), getFilename());}
+				}
+				
+				_cnt3++;
+			} while (true);
+			}
 			bloco();
 			match(LITERAL_fimprog);
 			match(T_pontof);
@@ -70,29 +103,8 @@ public MeuParser(ParserSharedInputState state) {
 		
 		try {      // for error handling
 			match(LITERAL_declare);
-			match(T_Id);
-			
-			mapVar.put(LT(0).getText(), LT(0).getText());
-			System.out.println("Variavel " + LT(0).getText() + " salva!");
-			
-			{
-			_loop4:
-			do {
-				if ((LA(1)==T_virg)) {
-					match(T_virg);
-					match(T_Id);
-					
-					mapVar.put(LT(0).getText(), LT(0).getText());
-					System.out.println("Variavel " + LT(0).getText() + " salva!");
-					
-				}
-				else {
-					break _loop4;
-				}
-				
-			} while (true);
-			}
-			match(T_pontof);
+			match(LITERAL_como);
+			tipo();
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
@@ -105,23 +117,163 @@ public MeuParser(ParserSharedInputState state) {
 		
 		try {      // for error handling
 			{
-			int _cnt7=0;
-			_loop7:
+			int _cnt14=0;
+			_loop14:
 			do {
 				if ((_tokenSet_2.member(LA(1)))) {
 					cmd();
 				}
 				else {
-					if ( _cnt7>=1 ) { break _loop7; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt14>=1 ) { break _loop14; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt7++;
+				_cnt14++;
 			} while (true);
 			}
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
 			recover(ex,_tokenSet_3);
+		}
+	}
+	
+	public final void tipo() throws RecognitionException, TokenStreamException {
+		
+		
+		try {      // for error handling
+			switch ( LA(1)) {
+			case LITERAL_String:
+			{
+				match(LITERAL_String);
+				
+				tipo = LT(0).getText(); 
+				tipo = tipo.replace("\"","");
+				
+				
+				match(T_Id);
+				
+				mapVarString.put(LT(0).getText(), LT(0).getText());
+				mapVarTipo.put(LT(0).getText(), tipo    );
+				System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
+				System.out.println("Variavel " + LT(0).getText() + " salva!");
+				
+				
+				{
+				_loop7:
+				do {
+					if ((LA(1)==T_virg)) {
+						match(T_virg);
+						match(T_Id);
+						
+						mapVarString.put(LT(0).getText(), LT(0).getText());
+						mapVarTipo.put(LT(0).getText(), tipo    );
+						System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
+						System.out.println("Variavel " + LT(0).getText() + " salva!");
+						
+					}
+					else {
+						break _loop7;
+					}
+					
+				} while (true);
+				}
+				match(T_pontof);
+				p.setVariaveisString(mapVarString.values());
+				break;
+			}
+			case LITERAL_Inteiro:
+			{
+				match(LITERAL_Inteiro);
+				
+				
+				tipo = LT(0).getText(); 
+				tipo = tipo.replace("\"","");
+				
+				
+				match(T_Id);
+				
+				mapVarInt.put(LT(0).getText(), LT(0).getText());
+				mapVarTipo.put(LT(0).getText(), tipo    );
+				System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
+				System.out.println("Variavel " + LT(0).getText() + " salva!");
+				
+				
+				{
+				_loop9:
+				do {
+					if ((LA(1)==T_virg)) {
+						match(T_virg);
+						match(T_Id);
+						
+						mapVarInt.put(LT(0).getText(), LT(0).getText());
+						mapVarTipo.put(LT(0).getText(), tipo    );
+						System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
+						System.out.println("Variavel " + LT(0).getText() + " salva!");
+						
+					}
+					else {
+						break _loop9;
+					}
+					
+				} while (true);
+				}
+				match(T_pontof);
+				p.setVariaveisInt(mapVarInt.values());
+				break;
+			}
+			case LITERAL_Decimal:
+			{
+				match(LITERAL_Decimal);
+				
+				
+				tipo = LT(0).getText(); 
+				tipo = tipo.replace("\"","");
+				
+				
+				
+				match(T_Id);
+				
+				mapVarDouble.put(LT(0).getText(), LT(0).getText());
+				mapVarTipo.put(LT(0).getText(), tipo    );
+				System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
+				System.out.println("Variavel " + LT(0).getText() + " salva!");
+				
+				{
+				_loop11:
+				do {
+					if ((LA(1)==T_virg)) {
+						match(T_virg);
+						match(T_Id);
+						
+						mapVarDouble.put(LT(0).getText(), LT(0).getText());
+						mapVarTipo.put(LT(0).getText(), tipo    );
+						System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
+						System.out.println("Variavel " + LT(0).getText() + " salva!");
+						
+					}
+					else {
+						break _loop11;
+					}
+					
+				} while (true);
+				}
+				match(T_pontof);
+				p.setVariaveisDouble(mapVarDouble.values());
+				
+						      
+							  System.out.println("Variable list assembled...");
+						
+				break;
+			}
+			default:
+			{
+				throw new NoViableAltException(LT(1), getFilename());
+			}
+			}
+		}
+		catch (RecognitionException ex) {
+			reportError(ex);
+			recover(ex,_tokenSet_1);
 		}
 	}
 	
@@ -183,10 +335,12 @@ public MeuParser(ParserSharedInputState state) {
 			match(T_ap);
 			match(T_Id);
 			System.out.println("Variavel "+ LT(0).getText() + " lida") ;
-			if (mapVar.get(LT(0).getText()) == null){
+			if ((mapVarInt.get(LT(0).getText()) == null)&&(mapVarDouble.get(LT(0).getText())==null)&&(mapVarInt.get(LT(0).getText()) == null)){
 			throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
 			
+			
 			}
+			p.addCommand(new CmdLeitura(LT(0).getText()));
 			
 			match(T_fp);
 		}
@@ -213,7 +367,7 @@ public MeuParser(ParserSharedInputState state) {
 			{
 				match(T_Id);
 				
-				if (mapVar.get(LT(0).getText()) == null){
+				if ((mapVarInt.get(LT(0).getText()) == null)&&(mapVarDouble.get(LT(0).getText())==null)&&(mapVarInt.get(LT(0).getText()) == null)){
 				throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
 				
 				}
@@ -226,6 +380,7 @@ public MeuParser(ParserSharedInputState state) {
 			}
 			}
 			}
+			p.addCommand(new CmdEscrita(LT(0).getText()));
 			match(T_fp);
 		}
 		catch (RecognitionException ex) {
@@ -240,13 +395,50 @@ public MeuParser(ParserSharedInputState state) {
 		try {      // for error handling
 			match(T_Id);
 			
-			if (mapVar.get(LT(0).getText()) == null){
+			if ((mapVarTipo.get(LT(0).getText()) == null)&&(mapVarDouble.get(LT(0).getText())==null)&&(mapVarInt.get(LT(0).getText()) == null)){
 			throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
 			
-			}
+			}else {comparaTipo = mapVarTipo.get(LT(0).getText());
+			
+			}       
 			
 			match(LITERAL_recebe);
-			expr();
+			{
+			switch ( LA(1)) {
+			case T_Id:
+			case T_ap:
+			case T_num:
+			{
+				expr();
+				break;
+			}
+			case T_texto:
+			{
+				
+				if(comparaTipo != "Inteiro"||comparaTipo != "Decimal"){
+				throw new RuntimeException("ERRO ID " + LT(0).getText() + " declarado como "+ comparaTipo + " sendo uma String");
+				
+				}
+				
+				
+				
+				match(T_texto);
+				
+				if(comparaTipo != "String"){
+				throw new RuntimeException("ERRO ID " + LT(0).getText() + " declarado como "+ comparaTipo + "não sendo uma String");
+				
+				}
+				
+				
+				
+				break;
+			}
+			default:
+			{
+				throw new NoViableAltException(LT(1), getFilename());
+			}
+			}
+			}
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
@@ -308,7 +500,7 @@ public MeuParser(ParserSharedInputState state) {
 			match(T_pontVirg);
 			match(T_Id);
 			
-			if (mapVar.get(LT(0).getText()) == null){
+			if ((mapVarInt.get(LT(0).getText()) == null)&&(mapVarDouble.get(LT(0).getText())==null)&&(mapVarInt.get(LT(0).getText()) == null)){
 			throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
 			
 			}
@@ -368,7 +560,7 @@ public MeuParser(ParserSharedInputState state) {
 			match(T_ap);
 			match(T_Id);
 			
-			if (mapVar.get(LT(0).getText()) == null){
+			if ((mapVarInt.get(LT(0).getText()) == null)&&(mapVarDouble.get(LT(0).getText())==null)&&(mapVarInt.get(LT(0).getText()) == null)){
 			throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
 			
 			}
@@ -376,8 +568,8 @@ public MeuParser(ParserSharedInputState state) {
 			match(T_fp);
 			match(T_cha);
 			{
-			int _cnt25=0;
-			_loop25:
+			int _cnt33=0;
+			_loop33:
 			do {
 				if ((LA(1)==LITERAL_caso)) {
 					match(LITERAL_caso);
@@ -403,10 +595,10 @@ public MeuParser(ParserSharedInputState state) {
 					bloco();
 				}
 				else {
-					if ( _cnt25>=1 ) { break _loop25; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt33>=1 ) { break _loop33; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt25++;
+				_cnt33++;
 			} while (true);
 			}
 			match(T_chf);
@@ -442,7 +634,6 @@ public MeuParser(ParserSharedInputState state) {
 		try {      // for error handling
 			fator();
 			opBool();
-			fator();
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
@@ -474,7 +665,7 @@ public MeuParser(ParserSharedInputState state) {
 			{
 				match(T_Id);
 				
-				if (mapVar.get(LT(0).getText()) == null){
+				if ((mapVarInt.get(LT(0).getText()) == null)&&(mapVarDouble.get(LT(0).getText())==null)&&(mapVarInt.get(LT(0).getText()) == null)){
 				throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
 				
 				}
@@ -492,14 +683,7 @@ public MeuParser(ParserSharedInputState state) {
 			{
 				match(T_ap);
 				expr();
-				expression = new Expression();
 				match(T_fp);
-				
-				if (expression.getRoot() == null)   expression.setRoot(num);
-				expression.eval();
-				System.out.println(expression);
-				System.out.println(expression.getRoot().toXml());
-				
 				break;
 			}
 			default:
@@ -559,7 +743,7 @@ public MeuParser(ParserSharedInputState state) {
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
-			recover(ex,_tokenSet_9);
+			recover(ex,_tokenSet_7);
 		}
 	}
 	
@@ -637,7 +821,7 @@ public MeuParser(ParserSharedInputState state) {
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
-			recover(ex,_tokenSet_9);
+			recover(ex,_tokenSet_7);
 		}
 	}
 	
@@ -665,7 +849,7 @@ public MeuParser(ParserSharedInputState state) {
 		try {      // for error handling
 			termo();
 			{
-			_loop29:
+			_loop37:
 			do {
 				switch ( LA(1)) {
 				case LITERAL_Mais:
@@ -708,7 +892,7 @@ public MeuParser(ParserSharedInputState state) {
 				}
 				default:
 				{
-					break _loop29;
+					break _loop37;
 				}
 				}
 			} while (true);
@@ -726,7 +910,7 @@ public MeuParser(ParserSharedInputState state) {
 		try {      // for error handling
 			fator();
 			{
-			_loop32:
+			_loop40:
 			do {
 				switch ( LA(1)) {
 				case LITERAL_MultiplicadoPor:
@@ -769,7 +953,7 @@ public MeuParser(ParserSharedInputState state) {
 				}
 				default:
 				{
-					break _loop32;
+					break _loop40;
 				}
 				}
 			} while (true);
@@ -869,8 +1053,12 @@ public MeuParser(ParserSharedInputState state) {
 		"\"fimprog\"",
 		"T_pontof",
 		"\"declare\"",
+		"\"como\"",
+		"\"String\"",
 		"T_Id",
 		"T_virg",
+		"\"Inteiro\"",
+		"\"Decimal\"",
 		"\"leia\"",
 		"T_ap",
 		"T_fp",
@@ -909,22 +1097,22 @@ public MeuParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_0 = new BitSet(mk_tokenSet_0());
 	private static final long[] mk_tokenSet_1() {
-		long[] data = { 29435136L, 0L};
+		long[] data = { 470959232L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_1 = new BitSet(mk_tokenSet_1());
 	private static final long[] mk_tokenSet_2() {
-		long[] data = { 21046528L, 0L};
+		long[] data = { 336741376L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_2 = new BitSet(mk_tokenSet_2());
 	private static final long[] mk_tokenSet_3() {
-		long[] data = { 34078752L, 0L};
+		long[] data = { 545259552L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_3 = new BitSet(mk_tokenSet_3());
 	private static final long[] mk_tokenSet_4() {
-		long[] data = { 55125280L, 0L};
+		long[] data = { 882000928L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_4 = new BitSet(mk_tokenSet_4());
@@ -934,37 +1122,37 @@ public MeuParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_5 = new BitSet(mk_tokenSet_5());
 	private static final long[] mk_tokenSet_6() {
-		long[] data = { 4160L, 0L};
+		long[] data = { 65600L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_6 = new BitSet(mk_tokenSet_6());
 	private static final long[] mk_tokenSet_7() {
-		long[] data = { 4096L, 0L};
+		long[] data = { 65536L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_7 = new BitSet(mk_tokenSet_7());
 	private static final long[] mk_tokenSet_8() {
-		long[] data = { 545267915074L, 0L};
+		long[] data = { 8724286637122L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_8 = new BitSet(mk_tokenSet_8());
 	private static final long[] mk_tokenSet_9() {
-		long[] data = { 67111168L, 0L};
+		long[] data = { 1073841152L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_9 = new BitSet(mk_tokenSet_9());
 	private static final long[] mk_tokenSet_10() {
-		long[] data = { 805310530L, 0L};
+		long[] data = { 12884967490L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_10 = new BitSet(mk_tokenSet_10());
 	private static final long[] mk_tokenSet_11() {
-		long[] data = { 805310528L, 0L};
+		long[] data = { 12884967488L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_11 = new BitSet(mk_tokenSet_11());
 	private static final long[] mk_tokenSet_12() {
-		long[] data = { 4026536002L, 0L};
+		long[] data = { 64424575042L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_12 = new BitSet(mk_tokenSet_12());

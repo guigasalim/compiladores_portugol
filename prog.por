@@ -1,5 +1,6 @@
 programa
-declare a,b,c.
+declare a,b,c como Inteiro.
+declare s como String.
 escreva ('Meu primeiro programa em IsI').
 leia(a).
 leia(b).
@@ -21,7 +22,7 @@ leia(s).
 } 
 senao{
 
-b Mais 5 Mais 3 Menos a Mais 45.
+b recebe 3 Mais 5 Mais 3 Menos 6 Mais 45.
 
 }.
 

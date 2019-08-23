@@ -6,23 +6,119 @@ class MeuParser extends Parser;
    AbstractOperand parent;
    BinaryOperand multOrDiv;
    char op;
-java.util.HashMap<String, String> mapVar;
+    int confirmaInt;
+    double confirmaDouble;
+    String tipo;
+    String comparaTipo;
+   Programa p;
+
+    public void setPrograma(String name){
+      p = new Programa(name);
+    }
+  
+    public Programa getPrograma(){
+       return p;
+    }
+java.util.HashMap<String, String> mapVarInt;
+java.util.HashMap<String, String> mapVarDouble;
+java.util.HashMap<String, String> mapVarString;
+java.util.HashMap<String, String> mapVarTipo;
 }
 
 
-prog        : {mapVar = new java.util.HashMap<String, String>();} "programa" declara bloco "fimprog" T_pontof
+prog        : {mapVarInt = new java.util.HashMap<String, String>();
+                mapVarDouble = new java.util.HashMap<String, String>();
+                mapVarString = new java.util.HashMap<String, String>();
+                mapVarTipo = new java.util.HashMap<String, String>();
+                } "programa" (declara)+ bloco "fimprog" T_pontof
             ;
     
-declara     :  "declare" T_Id { 
-                                mapVar.put(LT(0).getText(), LT(0).getText());
-                                System.out.println("Variavel " + LT(0).getText() + " salva!");
-                                }
-                        (T_virg T_Id{
-                                        mapVar.put(LT(0).getText(), LT(0).getText());
-                                        System.out.println("Variavel " + LT(0).getText() + " salva!");
-                                    })* T_pontof
+declara     :  "declare" "como" tipo 
             ;
-    
+
+tipo	:
+
+            "String" 
+                    {
+                    tipo = LT(0).getText(); 
+                   tipo = tipo.replace("\"","");
+                    
+                    }  
+            T_Id    
+                    { 
+                        mapVarString.put(LT(0).getText(), LT(0).getText());
+                        mapVarTipo.put(LT(0).getText(), tipo    );
+                        System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
+                        System.out.println("Variavel " + LT(0).getText() + " salva!");
+                                
+                    }
+            (T_virg T_Id
+                {
+                        mapVarString.put(LT(0).getText(), LT(0).getText());
+                        mapVarTipo.put(LT(0).getText(), tipo    );
+                        System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
+                       System.out.println("Variavel " + LT(0).getText() + " salva!");
+                }
+            )* T_pontof
+                {p.setVariaveisString(mapVarString.values());}
+            |"Inteiro"
+                
+                {
+                    
+                    tipo = LT(0).getText(); 
+                    tipo = tipo.replace("\"","");
+                    
+                    }
+                
+            T_Id 
+            {
+                    mapVarInt.put(LT(0).getText(), LT(0).getText());
+                     mapVarTipo.put(LT(0).getText(), tipo    );
+                        System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
+                    System.out.println("Variavel " + LT(0).getText() + " salva!");
+                    
+                  }
+            (T_virg T_Id
+                {
+                 mapVarInt.put(LT(0).getText(), LT(0).getText());
+                 mapVarTipo.put(LT(0).getText(), tipo    );
+                        System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
+                System.out.println("Variavel " + LT(0).getText() + " salva!");
+                }
+            )* T_pontof
+                {p.setVariaveisInt(mapVarInt.values());}
+            |"Decimal"
+                {
+                
+                    tipo = LT(0).getText(); 
+                   tipo = tipo.replace("\"","");
+                    
+                    
+                }
+            T_Id 
+                { 
+                 mapVarDouble.put(LT(0).getText(), LT(0).getText());
+                  mapVarTipo.put(LT(0).getText(), tipo    );
+                        System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
+                 System.out.println("Variavel " + LT(0).getText() + " salva!");
+                }
+            (T_virg T_Id
+                {
+                  mapVarDouble.put(LT(0).getText(), LT(0).getText());
+                   mapVarTipo.put(LT(0).getText(), tipo    );
+                        System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
+                  System.out.println("Variavel " + LT(0).getText() + " salva!");
+                                    }
+            )* T_pontof{p.setVariaveisDouble(mapVarDouble.values());}  
+
+	 {
+		      
+			  System.out.println("Variable list assembled...");
+		   }
+	
+	;
+
+
 bloco       :  (cmd)+
             ;
     
@@ -36,33 +132,59 @@ cmd         :  cmdLeia T_pontof
     
 cmdLeia     :  "leia" T_ap 
                         T_Id{System.out.println("Variavel "+ LT(0).getText() + " lida") ;
-                                if (mapVar.get(LT(0).getText()) == null){
+                                if ((mapVarInt.get(LT(0).getText()) == null)&&(mapVarDouble.get(LT(0).getText())==null)&&(mapVarInt.get(LT(0).getText()) == null)){
                                 throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
+                                
                                     
                                     }
+                                p.addCommand(new CmdLeitura(LT(0).getText()));
                                 }
-                        T_fp
+                        T_fp  
             ;
 
 cmdEscreva  :  "escreva" T_ap (T_texto |
                                 T_Id
                                     {
-                                        if (mapVar.get(LT(0).getText()) == null){
+                                        if ((mapVarInt.get(LT(0).getText()) == null)&&(mapVarDouble.get(LT(0).getText())==null)&&(mapVarInt.get(LT(0).getText()) == null)){
                                                 throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
                                     
                                         }
                                     }
-                                ) T_fp
+                                )  { p.addCommand(new CmdEscrita(LT(0).getText())); } T_fp
             ;
 
 cmdAttr     :  T_Id
                    {
-                        if (mapVar.get(LT(0).getText()) == null){
+                        if ((mapVarTipo.get(LT(0).getText()) == null)&&(mapVarDouble.get(LT(0).getText())==null)&&(mapVarInt.get(LT(0).getText()) == null)){
                                 throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
                                     
-                                    }
+                                    }else {comparaTipo = mapVarTipo.get(LT(0).getText());
+                                        
+                                     }       
                                 } 
-                "recebe" expr
+                "recebe" (expr|
+                                {
+                                if(comparaTipo != "Inteiro"||comparaTipo != "Decimal"){
+                                throw new RuntimeException("ERRO ID " + LT(0).getText() + " declarado como "+ comparaTipo + " sendo uma String");
+                                
+                                }
+                                
+                                
+                                }
+                
+                                T_texto
+                                
+                                {
+                                if(comparaTipo != "String"){
+                                throw new RuntimeException("ERRO ID " + LT(0).getText() + " declarado como "+ comparaTipo + "não sendo uma String");
+                                
+                                }
+                                
+                                
+                                }
+                                
+                                
+                                )
             ;
 
 cmdIf       : "se" T_ap termBool T_fp "entao" T_cha bloco  T_chf (cmdElse)?
@@ -71,7 +193,7 @@ cmdIf       : "se" T_ap termBool T_fp "entao" T_cha bloco  T_chf (cmdElse)?
 cmdElse     : "senao" T_cha bloco  T_chf
             ;
             
-termBool    : fator opBool fator
+termBool    : fator opBool 
             ;
 opBool      :  (cmdLt|cmdGt|cmdNe|cmdGtig|cmdLtig|cmdEq)
             ;
@@ -80,7 +202,7 @@ cmdWhile    : "enquanto" T_ap termBool T_fp T_cha bloco  T_chf
 	        ;
 cmdFor      : "para" T_ap declara T_pontVirg T_Id
                                                 {
-                                                    if (mapVar.get(LT(0).getText()) == null){
+                                                    if ((mapVarInt.get(LT(0).getText()) == null)&&(mapVarDouble.get(LT(0).getText())==null)&&(mapVarInt.get(LT(0).getText()) == null)){
                                                             throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
                                     
                                                                                             }
@@ -91,7 +213,7 @@ cmdFor      : "para" T_ap declara T_pontVirg T_Id
 cmdSwitch   : "escolha" T_ap T_Id 
                                 
                                 {
-                                    if (mapVar.get(LT(0).getText()) == null){
+                                    if ((mapVarInt.get(LT(0).getText()) == null)&&(mapVarDouble.get(LT(0).getText())==null)&&(mapVarInt.get(LT(0).getText()) == null)){
                                     throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
                                     
                                     }
@@ -112,7 +234,7 @@ expr        : {expression = new Expression();} expr_c
           
           
           
-expr_c :          termo (cmdSoma 
+expr_c :           termo (cmdSoma 
                      { 
                      if(expression.getRoot() == null){
                         sumOrSubt.setRight(num);
@@ -144,7 +266,7 @@ expr_c :          termo (cmdSoma
                      }
                   })* 
             ;            
-termo       :  fator (cmdMult
+termo       :    fator (cmdMult
                       { 
                      if(expression.getRoot() == null){
                         multOrDiv.setRight(num);
@@ -181,7 +303,7 @@ termo       :  fator (cmdMult
 
 fator       :  T_Id
                 {
-                    if (mapVar.get(LT(0).getText()) == null){
+                    if ((mapVarInt.get(LT(0).getText()) == null)&&(mapVarDouble.get(LT(0).getText())==null)&&(mapVarInt.get(LT(0).getText()) == null)){
                                 throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
                                     
                                     }
@@ -190,14 +312,9 @@ fator       :  T_Id
                 | T_num 
                 { num = new UnaryOperand(Float.parseFloat(LT(0).getText()));
                 }
-                | T_ap expr {expression = new Expression();} 
+                | T_ap expr  
                   T_fp
-                  {
-                    if (expression.getRoot() == null)   expression.setRoot(num);
-                                                        expression.eval();
-                                                        System.out.println(expression);
-                                                        System.out.println(expression.getRoot().toXml());
-          } 
+                  				 
             ;
             
 cmdSoma :  "Mais"
@@ -280,12 +397,12 @@ T_cha	    : '{'
 T_chf	    : '}'
 	        ;
 
-T_num       : ('0'..'9')+
+T_num       : ('0'..'9')+(T_virg ('0'..'9')+)?
             ;
     
 
           
-T_texto     : "'" ('a'..'z' | '0'..'9' | ' ' | 'A'..'Z')+ "'"
+T_texto  : '"' ( 'a'..'z' | '0'..'9' | ' ' | 'A'..'Z' )+ '"'
             ;
           
 T_blank     : (" " | "\n"{newline();} | "\r" | "\t") {_ttype=Token.SKIP;}
