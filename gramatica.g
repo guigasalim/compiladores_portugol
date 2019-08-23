@@ -51,16 +51,14 @@ tipo	:
                     { 
                         mapVarString.put(LT(0).getText(), LT(0).getText());
                         mapVarTipo.put(LT(0).getText(), tipo    );
-                        System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
-                        System.out.println("Variavel " + LT(0).getText() + " salva!");
+                      
                                 
                     }
             (T_virg T_Id
                 {
                         mapVarString.put(LT(0).getText(), LT(0).getText());
                         mapVarTipo.put(LT(0).getText(), tipo    );
-                        System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
-                       System.out.println("Variavel " + LT(0).getText() + " salva!");
+                        
                 }
             )* T_pontVirg
                 {p.setVariaveisString(mapVarString.values());}
@@ -77,16 +75,14 @@ tipo	:
             {
                     mapVarInt.put(LT(0).getText(), LT(0).getText());
                      mapVarTipo.put(LT(0).getText(), tipo    );
-                        System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
-                    System.out.println("Variavel " + LT(0).getText() + " salva!");
+                        
                     
                   }
             (T_virg T_Id
                 {
                  mapVarInt.put(LT(0).getText(), LT(0).getText());
                  mapVarTipo.put(LT(0).getText(), tipo    );
-                        System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
-                System.out.println("Variavel " + LT(0).getText() + " salva!");
+                       
                 }
             )* T_pontVirg
                 {p.setVariaveisInt(mapVarInt.values());}
@@ -102,15 +98,13 @@ tipo	:
                 { 
                  mapVarDouble.put(LT(0).getText(), LT(0).getText());
                   mapVarTipo.put(LT(0).getText(), tipo    );
-                        System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
-                 System.out.println("Variavel " + LT(0).getText() + " salva!");
+                        
                 }
             (T_virg T_Id
                 {
                   mapVarDouble.put(LT(0).getText(), LT(0).getText());
                    mapVarTipo.put(LT(0).getText(), tipo    );
-                        System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
-                  System.out.println("Variavel " + LT(0).getText() + " salva!");
+                      
                                     }
             )* T_pontVirg{p.setVariaveisDouble(mapVarDouble.values());}  
 
@@ -224,7 +218,7 @@ cmdElse     : "senao" T_cha
             
 termBool    : {conteudoBool = "";}fator {
                     conteudoBool = conteudoBool + LT(0).getText();
-                    System.out.println("O token anterior é: "+LT(0).getText());
+                    
                     
                     } opBool 
             ;
@@ -241,15 +235,7 @@ cmdWhile    : "enquanto" T_ap termBool T_fp "faca"
                             
                             p.addCommand(new CmdClose(LT(0).getText()));}
 	        ;
-cmdFor      : "para" T_ap declara T_pontVirg T_Id
-                                                {
-                                                    if ((mapVarInt.get(LT(0).getText()) == null)&&(mapVarDouble.get(LT(0).getText())==null)&&(mapVarInt.get(LT(0).getText()) == null)){
-                                                            throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
-                                    
-                                                                                            }
-                                                }
-                                                (cmdLt|cmdGt|cmdNe|cmdGtig|cmdLtig) fator T_pontVirg expr T_fp T_cha bloco  T_chf
-	        ;
+
 	        
 cmdSwitch   : "escolha" T_ap T_Id 
                                 
@@ -258,9 +244,31 @@ cmdSwitch   : "escolha" T_ap T_Id
                                     throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
                                     
                                     }
+                                
+                                idVar = LT(0).getText();
                                 }
                                 
-                                T_fp T_cha ("caso" (T_num|T_texto) "faca" bloco )+ T_chf
+                                T_fp T_cha{  p.addCommand(new CmdEscolha(idVar));
+                                                    idVar = "";} ("caso" (T_Id 
+                                
+                                {
+                                    if ((mapVarInt.get(LT(0).getText()) == null)&&(mapVarDouble.get(LT(0).getText())==null)&&(mapVarInt.get(LT(0).getText()) == null)){
+                                    throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
+                                    
+                                    }
+                                }|T_num|T_texto)
+                                    { idVar = LT(0).getText();
+                                    
+                                    }
+                                "faca"
+                                {
+                                p.addCommand(new CmdCaso(idVar));
+                                idVar = "";
+                                }
+                                bloco {p.addCommand(new CmdFimCaso());})+ T_chf  {
+                                p.addCommand(new CmdClose(LT(0).getText()));
+                                
+                                }
 	        ;
 
 

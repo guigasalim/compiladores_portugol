@@ -25,8 +25,7 @@ declare como String g;
 	
 	a recebe 6;
 	escreva(a);
-	b recebe 5 Mais 3 Mais 8;
-	escreva(b);
+	
     c recebe (10 MultiplicadoPor 234) Mais 90;
     escreva( c );
     
@@ -45,6 +44,15 @@ declare como String g;
     d recebe 3;
     escreva(d);
     }
+escolha (b){
+caso 1 faca escreva("oi");
+caso 2 faca escreva("tchau");
+caso 3 faca escreva("bem vindo");
+caso 4 faca escreva("Ate Mais");
+caso 5 faca escreva("Deu certo");
+
+}
+
     
 	
 fimprog;

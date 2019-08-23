@@ -157,8 +157,7 @@ public MeuParser(ParserSharedInputState state) {
 				
 				mapVarString.put(LT(0).getText(), LT(0).getText());
 				mapVarTipo.put(LT(0).getText(), tipo    );
-				System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
-				System.out.println("Variavel " + LT(0).getText() + " salva!");
+				
 				
 				
 				{
@@ -170,8 +169,7 @@ public MeuParser(ParserSharedInputState state) {
 						
 						mapVarString.put(LT(0).getText(), LT(0).getText());
 						mapVarTipo.put(LT(0).getText(), tipo    );
-						System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
-						System.out.println("Variavel " + LT(0).getText() + " salva!");
+						
 						
 					}
 					else {
@@ -197,8 +195,7 @@ public MeuParser(ParserSharedInputState state) {
 				
 				mapVarInt.put(LT(0).getText(), LT(0).getText());
 				mapVarTipo.put(LT(0).getText(), tipo    );
-				System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
-				System.out.println("Variavel " + LT(0).getText() + " salva!");
+				
 				
 				
 				{
@@ -210,8 +207,7 @@ public MeuParser(ParserSharedInputState state) {
 						
 						mapVarInt.put(LT(0).getText(), LT(0).getText());
 						mapVarTipo.put(LT(0).getText(), tipo    );
-						System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
-						System.out.println("Variavel " + LT(0).getText() + " salva!");
+						
 						
 					}
 					else {
@@ -238,8 +234,7 @@ public MeuParser(ParserSharedInputState state) {
 				
 				mapVarDouble.put(LT(0).getText(), LT(0).getText());
 				mapVarTipo.put(LT(0).getText(), tipo    );
-				System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
-				System.out.println("Variavel " + LT(0).getText() + " salva!");
+				
 				
 				{
 				_loop11:
@@ -250,8 +245,7 @@ public MeuParser(ParserSharedInputState state) {
 						
 						mapVarDouble.put(LT(0).getText(), LT(0).getText());
 						mapVarTipo.put(LT(0).getText(), tipo    );
-						System.out.println("Variavel "+LT(0).getText()+" encontrada do tipo "+tipo);
-						System.out.println("Variavel " + LT(0).getText() + " salva!");
+						
 						
 					}
 					else {
@@ -590,8 +584,12 @@ public MeuParser(ParserSharedInputState state) {
 			
 			}
 			
+			idVar = LT(0).getText();
+			
 			match(T_fp);
 			match(T_cha);
+			p.addCommand(new CmdEscolha(idVar));
+			idVar = "";
 			{
 			int _cnt33=0;
 			_loop33:
@@ -600,6 +598,17 @@ public MeuParser(ParserSharedInputState state) {
 					match(LITERAL_caso);
 					{
 					switch ( LA(1)) {
+					case T_Id:
+					{
+						match(T_Id);
+						
+						if ((mapVarInt.get(LT(0).getText()) == null)&&(mapVarDouble.get(LT(0).getText())==null)&&(mapVarInt.get(LT(0).getText()) == null)){
+						throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
+						
+						}
+						
+						break;
+					}
 					case T_num:
 					{
 						match(T_num);
@@ -616,8 +625,16 @@ public MeuParser(ParserSharedInputState state) {
 					}
 					}
 					}
+					idVar = LT(0).getText();
+					
+					
 					match(LITERAL_faca);
+					
+					p.addCommand(new CmdCaso(idVar));
+					idVar = "";
+					
 					bloco();
+					p.addCommand(new CmdFimCaso());
 				}
 				else {
 					if ( _cnt33>=1 ) { break _loop33; } else {throw new NoViableAltException(LT(1), getFilename());}
@@ -627,6 +644,10 @@ public MeuParser(ParserSharedInputState state) {
 			} while (true);
 			}
 			match(T_chf);
+			
+			p.addCommand(new CmdClose(LT(0).getText()));
+			
+			
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
@@ -688,7 +709,7 @@ public MeuParser(ParserSharedInputState state) {
 			fator();
 			
 			conteudoBool = conteudoBool + LT(0).getText();
-			System.out.println("O token anterior é: "+LT(0).getText());
+			
 			
 			
 			opBool();

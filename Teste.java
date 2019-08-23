@@ -45,9 +45,6 @@ System.out.println(f);
 a=6;
 System.out.println(a);
 
-b=5+3+8;
-System.out.println(b);
-
 c=(10*234)+90;
 System.out.println(c);
 
@@ -65,5 +62,27 @@ else {
 d=3;
 System.out.println(d);
 
+}
+switch (b) {
+case 1 :
+System.out.println("oi");
+
+ break;
+case 2 :
+System.out.println("tchau");
+
+ break;
+case 3 :
+System.out.println("bem vindo");
+
+ break;
+case 4 :
+System.out.println("Ate Mais");
+
+ break;
+case 5 :
+System.out.println("Deu certo");
+
+ break;
 }
 }}
