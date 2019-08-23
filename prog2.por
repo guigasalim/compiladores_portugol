@@ -23,22 +23,28 @@ declare como String g;
 	escreva(e);
 	escreva( f );
 	
-	a recebe 5;
+	a recebe 6;
+	escreva(a);
 	b recebe 5 Mais 3 Mais 8;
+	escreva(b);
     c recebe (10 MultiplicadoPor 234) Mais 90;
+    escreva( c );
     
     se (a eMaiorQue 5) entao {
     
     c recebe 3;
-    enquanto ( b eMenorEIgualQue 4) faca {
-    d recebe 2.5 Mais 9.9;
+    escreva( c );
+    enquanto ( f eMenorEIgualQue 40) faca {
+    f recebe f Mais 9.9;
+    escreva(f);
     }
     
     
     }senao{
     
     d recebe 3;
+    escreva(d);
     }
-	
+    
 	
 fimprog;

@@ -42,16 +42,28 @@ System.out.println(e);
 
 System.out.println(f);
 
-a=5;
+a=6;
+System.out.println(a);
+
 b=5+3+8;
+System.out.println(b);
+
 c=(10*234)+90;
+System.out.println(c);
+
 if (a>5) {
 c=3;
-while (b<=4) {
-d=2.5+9.9;
+System.out.println(c);
+
+while (f<=40) {
+f=f+9.9;
+System.out.println(f);
+
 }
 }
 else {
 d=3;
+System.out.println(d);
+
 }
 }}

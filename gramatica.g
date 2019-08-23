@@ -348,6 +348,7 @@ fator       :  T_Id
                                 throw new RuntimeException("ERRO ID " + LT(0).getText() + " não declarado");
                                     
                                     }
+                    conteudoAtr = conteudoAtr + LT(0).getText();
                     }
                 
                 | T_num 
